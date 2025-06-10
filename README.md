@@ -24,6 +24,6 @@ This is a learning web project built to practice working with APIs, `localStorag
 ## How to Start
 
 Open the project on GitHub Pages:  
-
+[https://darogible.github.io/Afa-travel/](https://darogible.github.io/Afa-travel/)
 
 Or clone the repository and open `index.html` in your browser
