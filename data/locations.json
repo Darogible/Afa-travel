@@ -1,0 +1,23 @@
+{
+  "countries": ["italy", "france", "portugal", "spain"],
+  "cities": [
+    { "name": "milan", "country": "italy" },
+    { "name": "turin", "country": "italy" },
+    { "name": "rome", "country": "italy" },
+    { "name": "bari", "country": "italy" },
+    { "name": "palermo", "country": "italy" },
+
+    { "name": "paris", "country": "france" },
+    { "name": "toulouse", "country": "france" },
+    { "name": "marseille", "country": "france" },
+
+    { "name": "lisbon", "country": "portugal" },
+    { "name": "porto", "country": "portugal" },
+
+    { "name": "madrid", "country": "spain" },
+    { "name": "barcelona", "country": "spain" },
+    { "name": "malaga", "country": "spain" },
+    { "name": "valencia", "country": "spain" },
+    { "name": "bilbao", "country": "spain" }
+  ]
+}

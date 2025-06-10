@@ -1,0 +1,798 @@
+@font-face {
+  font-family: 'Poppins';
+  src: url('./fonts/Poppins-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+  
+@font-face {
+  font-family: 'Poppins';
+  src: url('./fonts/Poppins-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+  
+@font-face {
+  font-family: 'Poppins';
+  src: url('./fonts/Poppins-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+  
+@font-face {
+  font-family: 'Poppins';
+  src: url('./fonts/Poppins-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    clip: rect(0, 0, 0, 0) !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+}
+
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    color: #111;
+    line-height: 1.5;
+}
+
+.no-scroll {
+  overflow: hidden !important;
+}
+
+
+
+
+/* Main code */
+.header-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.header {
+  position: relative; /* to bind header-background to a specific parent, not to body */
+  height: 100vh;
+  overflow: hidden;
+}
+
+.header-logo {
+  display: block;
+  width: 48px;
+  height: auto;
+  text-decoration: none; 
+}
+
+.header-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.web-name {
+  color: white;
+  white-space: nowrap;
+  font-size: 1.2rem;
+  font-weight: 550;
+  padding-block: 0.6rem;
+}
+
+.menu {
+  display: none;
+}
+
+.lang-switcher {
+  position: relative; /* so that .lang-dropdown falls exactly under lang-switcher */
+  
+}
+
+.lang-dropdown { /* so that drops down exactly under the button, for this I made "position: relative" for lang-switcher */
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #003366;
+  color: white;
+  list-style: none;
+  padding: 0.5rem 0;
+  border-radius: 8px;
+  margin-top: 0.25rem;
+  z-index: 10;
+
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 80px;
+  text-align: center;
+}
+
+.lang-dropdown li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.lang-dropdown li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.lang-button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+
+  padding: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  border-radius: 999px;
+}
+
+.burger {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  font-size: 1.2rem;
+
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mobile-menu {
+  position: absolute;
+  background-color: rgba(0, 51, 102, 0.95);
+  width: 100%;
+  list-style: none;
+  text-decoration: none;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  z-index: 10;
+}
+
+.menu-items li {
+  list-style: none;
+  padding: 0.2rem;
+}
+
+.menu-items a {
+  text-decoration: none;
+  color: white;
+  padding-left: 1rem;
+}
+
+.nav--active {
+  background-color: rgba(0, 51, 102, 0.95);
+}
+
+.menu-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 0.3rem;
+}
+
+.hero-content {
+  color: white;
+  justify-content: flex-end;
+}
+
+.hero-content h1 {
+  padding: 1.5rem 0.8rem;
+}
+
+.hero-subcontent {
+  position: absolute;
+  top: 70vh;
+  font-size: 1.1rem;
+  padding-inline: 1rem;
+}
+
+.hero-subcontent a {
+  background-color: rgb(127, 255, 212);
+  width: 80vw;
+  height: 7vh;
+  border-radius: 999px;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 2rem auto; /* centers horizontally */
+
+  display: flex;   
+  justify-content: center; 
+  align-items: center;   
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: black;
+}
+
+
+
+
+
+
+
+/*                    */
+/*       Main         */
+/*                    */
+.main {
+  font-family: 'Poppins', sans-serif;
+}
+
+.search-container {
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-container h1 {
+  text-align: center;
+}
+
+.question-of-direction {
+  padding: 3rem 1rem 1rem 1rem;
+}
+
+#country-input, #city-input {
+  padding: 0.3rem 0.5rem;
+  width: 90vw;
+  height: 3rem;
+  margin: 0.3rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 1.2rem;
+}
+
+.standard-button {
+  background-color: rgb(127, 255, 212);
+  width: 80vw;
+  height: 3.5rem;
+  border-radius: 999px;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  display: block;
+  margin: 1.2rem auto; /* this centers horizontally */
+  font-size: 1.3rem;
+
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.standard-button:hover {
+  background-color: rgb(106, 247, 200);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+.standard-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Select country or city in search */
+.country-dropdown, .cities-dropdown {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(255, 255, 255);
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 5vh;
+  overflow-y: auto;
+}
+
+.country-dropdown-search, .cities-dropdown-search {
+  width: 80vw;
+  max-width: 500px;
+
+  padding: 1rem;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.country-dropdown-list, .cities-dropdown-list {
+  width: 90vw;
+
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.country-dropdown-list li, .cities-dropdown-list li {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.country-dropdown-list li:hover, .cities-dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.country-search-input, .cities-search-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-country-search, .close-cities-search {
+  color: gray;
+  margin: 0.4rem;
+  font-size: 1.6rem;
+}
+.custom-alert {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background-color: #ff4d4d;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.custom-alert.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/*                    */
+/*    Main gallery    */
+/*                    */
+.main-gallery {
+  padding: 2rem 1rem;
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+}
+
+.gallery-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: white;
+}
+
+.gallery-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.gallery-item {
+  /* flex: 0 0 80%;
+  scroll-snap-align: start; */
+  background-color: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  padding: 1.2rem;
+}
+
+.gallery-item h3 {
+  margin-left: 0.2rem;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 65vh;
+  border-radius: 6px;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+}
+
+.find-out {
+  display: flex;
+  width: 50vw;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  margin: 1rem auto;
+  margin-bottom: 0;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.find-out:hover {
+  background-color: #0056b3;
+}
+
+
+
+
+
+
+
+
+
+
+/*                    */
+/*    results.html    */
+/*                    */
+.header-results {
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main_results {
+  min-height: 500px;
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+}
+
+.basic-info-city {
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+}
+
+.country-city-flag {
+  display: flex;
+  flex-direction: row;
+  padding-top: 1rem;
+  margin: auto;
+  justify-content: center;
+  gap: 0.5rem;
+  color: white;
+}
+
+.basic-info-city p {
+  color: white;
+  text-align: center;
+}
+
+
+/*                    */
+/*      Weather       */
+/*                    */
+.current-weather {
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+  background-color: #f0f8ff;
+  padding: 0.7rem 0.1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.weather-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 85vw;
+  text-align: center;
+
+  padding-bottom: 1rem;
+}
+
+#weather-card-icon {
+  width: 80px;
+  height: auto;
+}
+
+.feels-like, .sunset-time, .sunrise-time {
+  display: flex;
+  justify-content: center; 
+}
+
+.current-temp, .feels-like, .sunrise-time, .sunset-time {
+  display: flex;
+  flex-direction: row;
+}
+
+#current-temp, #feels-like, #weather-description {
+    font-weight: 550;
+}
+
+#weather-description {
+  margin: 0.2rem 0;
+}
+
+#country-flag {
+  width: 48px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.forecast-weather {
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);;
+  color: white;
+}
+
+.forecast-weather h2 {
+  text-align: center;
+  padding-top: 0.8rem;
+}
+
+.forecast-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.5rem;
+  text-align: center;
+}
+
+.forecast-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.weather-forecast-time-and-temp {
+  text-align: center;
+}
+
+
+/*                       */
+/*  Country information  */
+/*                       */
+.country-facts {
+  padding: 2rem 1rem;
+  background: #ffffff;
+  
+}
+
+.country-facts h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.facts-list {
+  list-style: none;
+  padding: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.facts-list li {
+  font-size: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+/*                 */
+/*     Gallery     */
+/*                 */
+.city-gallery {
+  padding: 2rem 1.2rem;
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+}
+
+.city-gallery h2 {
+  color: white;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+
+/*                   */
+/*  Favorite cities  */
+/*                   */
+.favorite-cities {
+  background: linear-gradient(to right, #00529a, #257499, #168a9e);
+  height: 105vh;
+}
+
+.favorite-cities h2 {
+  color: white;
+  text-align: center;
+  padding: 1rem 1rem;
+  font-size: 1.8rem;
+}
+
+#favorites-swiper {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.city-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.8rem;
+}
+
+.more-details {
+  background-color: #045abb;
+  color: white;
+  border-radius: 999px;
+  padding: 0.4rem 1.5rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.more-details:hover {
+  background-color: #013671;
+  cursor: pointer;
+}
+
+.delete-city {
+  background-color: transparent;
+  border: none;
+  color: #ff4d4d;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.delete-city:hover {
+  transform: scale(1.2);
+}
+
+.empty-favorites-message {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  margin-top: 1rem;
+}
+
+
+
+
+
+
+/*                   */
+/*       Footer      */
+/*                   */
+.footer {
+  height: 350px;
+}
+
+.footer {
+  background-color: #003366;
+  color: white;
+  padding: 2rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.footer a {
+  color: #aeefff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-socials {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.footer-contact input {
+  padding: 0.5rem;
+  width: 250px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+}
+
+.footer-contact button {
+  padding: 0.5rem 1.2rem;
+  background-color: aquamarine;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.footer-contact button:hover {
+  background-color: #7fffd4;
+}
+
+#scroll-top-button {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#scroll-top-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
