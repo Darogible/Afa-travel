@@ -90,6 +90,7 @@ langItems.forEach(item => {
         currentLangDisplay.textContent = selectedLang.toUpperCase();
         langMenu.classList.toggle('visually-hidden');
         loadLanguage(selectedLang);
+        //location.reload();
     });
 });
 
@@ -193,111 +194,333 @@ const countryDropdown = document.getElementById('country-dropdown');
 const countrySearchInput = document.getElementById('country-search-input');
 const closeCountrySearch = document.querySelector('.close-country-search');
 
-if (countryInput && countryDropdown && countrySearchInput) {
-  countryInput.addEventListener('click', () => {
-    countryDropdown.classList.remove('visually-hidden');
-    document.documentElement.classList.add('no-scroll');
-    setTimeout(() => {
-      countrySearchInput.focus();
-    }, 10);
-  });
-}
-
-if (closeCountrySearch) {
-  closeCountrySearch.addEventListener('click', () => {
-    const dropdown = document.getElementById('country-dropdown');
-    if (dropdown) dropdown.classList.add('visually-hidden');
-    document.documentElement.classList.remove('no-scroll');
-  });
-}
-
-
 // Select country in search
 let allCountries = [];
 
-fetch('./data/locations.json')
-  // .then(response => response.json()) // first I did it like this, but it's not very good, need to check for file upload
-  .then(response => {
-  if (!response.ok) {
-    throw new Error('Failed to load file: ' + response.status);
-  }
-  return response.json();
-  })
+/* test */
+if (countryInput && countryDropdown && countrySearchInput) {
+    inputCountry();
+}
 
-  .then(data => {
-    allCountries = data.countries;
-    const sortedCountries = allCountries.slice().sort((a, b) => a.localeCompare(b));
-    renderCountryList(sortedCountries);
-  });
+// Universal function for city and country to close search when clicking outside
+function handleClickOutside(dropdownId, inputId, close) {
+    return function(event) {
+        const dropdown = document.getElementById(dropdownId);
+        const input    = document.getElementById(inputId);
 
-  function renderCountryList(countries) {
+        if (
+            dropdown &&
+            !dropdown.contains(event.target) &&
+            input &&
+            !input.contains(event.target)
+        ) {
+            close();
+        }
+    };
+}
+
+
+// Desktop positioning for country search
+(function setupDesktopCountryOverlay() {
+    const BREAKPOINT = 1024;
+    const searchWrapper = document.querySelector('.country-search-input');
+    const dropdown      = countryDropdown; // id = 'country-dropdown'
+    const searchInput   = countrySearchInput // id = 'country-search-input'
+    const closeButton      = document.getElementById('close-country-search');
+
+    if (!countryInput || !searchWrapper || !dropdown) return;
+
+    let opened = false;
+
+    let clickOutside = handleClickOutside('country-dropdown', 'country-input', closeDesktopDropdown);
+    document.addEventListener('click', clickOutside);
+
+    function syncPosition() {
+        if (!opened || window.innerWidth < BREAKPOINT) return;
+
+        // getBoundingClientRect is built-in method of any DOM element, returns coordinates
+        const rect = countryInput.getBoundingClientRect();
+
+        // Position input on top of "countryInput"
+        searchWrapper.style.top    = `${rect.top}px`;
+        searchWrapper.style.left   = `${rect.left}px`;
+        searchWrapper.style.width  = `${rect.width}px`;
+        searchWrapper.style.height = `${rect.height}px`;
+
+        // Position 'country-list' under the input
+        const list = document.getElementById('country-list');
+        if (list) {
+            list.style.position = 'fixed';
+            list.style.left = `${rect.left}px`;
+            list.style.top = `${rect.top + rect.height}px`;
+            list.style.width = `${rect.width}px`;
+        }
+    }
+
+    function openDesktopDropdown() {
+        if (window.innerWidth < BREAKPOINT) return;
+        dropdown.classList.remove('visually-hidden');
+        opened = true;
+
+        document.addEventListener('click', handleClickOutside);
+
+        syncPosition();
+        window.addEventListener('scroll',  syncPosition);
+        window.addEventListener('resize',  syncPosition);
+        setTimeout(() => searchInput.focus(), 10);
+    }
+
+    function closeDesktopDropdown() {
+        dropdown.classList.add('visually-hidden');
+        opened = false;
+
+        // web won't do extra work
+        window.removeEventListener('scroll',  syncPosition);
+        window.removeEventListener('resize',  syncPosition);
+        document.removeEventListener('click', handleClickOutside); // Preventing memory leaks
+    }
+
+    countryInput.addEventListener('click', openDesktopDropdown);
+    if (closeButton) closeButton.addEventListener('click', closeDesktopDropdown);
+})();
+
+function renderCountryList(countries) {
     const list = document.getElementById('country-list');
     if (!list) return; // If there is no element, we exit immediately
     list.innerHTML = ''; // clear the old
 
     countries.forEach(country => {
-      const li = document.createElement('li');
-      li.textContent = translations[country] || country;
+        const li = document.createElement('li');
+        li.textContent = translations[country] || country;
 
-      li.addEventListener('click', () => {
-        selectedCountryKey = country;
-        // Show the translation to the user
-        countryInput.value = translations[country] || country;
-        // Store the original country name in the data attribute
-        countryInput.dataset.countryKey = country;
-        // Reset the search bar
-        countrySearchInput.value = "";
-        // Reset filtered list
-        renderCountryList(allCountries);
-        // Cleaning up the city
-        document.getElementById("city-input").value = "";
+        li.addEventListener('click', () => {
+            selectedCountryKey = country;
+            console.log("test 5: " + selectedCountryKey);
+            // Show the translation to the user
+            countryInput.value = translations[country] || country;
+            // Store the original country name in the data attribute
+            countryInput.dataset.countryKey = country;
+            // Reset the search bar
+            countrySearchInput.value = "";
+            // Reset filtered list
+            renderCountryList(allCountries);
+            // Cleaning up the city
+            document.getElementById("city-input").value = "";
 
-        countryDropdown.classList.add('visually-hidden');
+            countryDropdown.classList.add('visually-hidden');
+            document.documentElement.classList.remove('no-scroll');
+        });
+
+        list.appendChild(li);
+    });
+}
+
+
+function inputCountry() {
+    if (countryInput && countryDropdown && countrySearchInput) {
+      countryInput.addEventListener('click', () => {
+      countryDropdown.classList.remove('visually-hidden');
+      //document.documentElement.classList.add('no-scroll');
+      if (window.matchMedia('(max-width: 1023px)').matches) {
+          document.documentElement.classList.add('no-scroll');
+      }
+      setTimeout(() => {
+          countrySearchInput.focus();
+      }, 10);
+
+      });
+    }
+
+    if (closeCountrySearch) {
+      closeCountrySearch.addEventListener('click', () => {
+        const dropdown = document.getElementById('country-dropdown');
+        if (dropdown) dropdown.classList.add('visually-hidden');
         document.documentElement.classList.remove('no-scroll');
       });
-
-      list.appendChild(li);
-    });
-  }
-
-  if (countrySearchInput) {
-    countrySearchInput.addEventListener('input', () => {
-      const searchValue = countrySearchInput.value.trim().toLowerCase();
-      const filtered = allCountries.filter(c =>
-        (translations[c] || c).toLowerCase().startsWith(searchValue)
-      );
-      renderCountryList(filtered);
-    });
-  }
-
-  // opening and closing the keyboard on mobile phones
-  if (countryInput && countryDropdown && countrySearchInput) {
-    countryInput.addEventListener('click', () => {
-      countryDropdown.classList.remove('visually-hidden');
-      setTimeout(() => {
-        countrySearchInput.focus(); // keyboard appears
-      }, 10);
-    });
-  }
-
-  if (closeCountrySearch && countryDropdown && countrySearchInput) {
-    closeCountrySearch.addEventListener('click', () => {
-      countryDropdown.classList.add('visually-hidden');
-      countrySearchInput.blur(); // hide keyboard
-    });
-  }
+    }
 
 
-  // opening and closing cities selection
-  const citiesInput = document.getElementById('city-input');
-  const citiesDropdown = document.getElementById('cities-dropdown');
-  const citiesSearchInput = document.getElementById('cities-search-input');
-  const closeCitiesSearch = document.querySelector('.close-cities-search');
 
+    fetch('./data/locations.json')
+      // .then(response => response.json()) // first I did it like this, but it's not very good, need to check for file upload
+      .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to load file: ' + response.status);
+      }
+      return response.json();
+      })
+
+      .then(data => {
+        allCountries = data.countries;
+        const sortedCountries = allCountries.slice().sort((a, b) => a.localeCompare(b));
+        console.log(sortedCountries);
+        renderCountryList(sortedCountries);
+      });
+
+
+
+
+    /*
+      function renderCountryList(countries) {
+        const list = document.getElementById('country-list');
+        if (!list) return; // If there is no element, we exit immediately
+        list.innerHTML = ''; // clear the old
+
+        countries.forEach(country => {
+          const li = document.createElement('li');
+          li.textContent = translations[country] || country;
+
+          li.addEventListener('click', () => {
+            selectedCountryKey = country;
+            console.log("test 5: " + selectedCountryKey);
+            // Show the translation to the user
+            countryInput.value = translations[country] || country;
+            // Store the original country name in the data attribute
+            countryInput.dataset.countryKey = country;
+            // Reset the search bar
+            countrySearchInput.value = "";
+            // Reset filtered list
+            renderCountryList(allCountries);
+            // Cleaning up the city
+            document.getElementById("city-input").value = "";
+
+            countryDropdown.classList.add('visually-hidden');
+            document.documentElement.classList.remove('no-scroll');
+          });
+
+          list.appendChild(li);
+        });
+      }
+*/
+
+      if (countrySearchInput) {
+        countrySearchInput.addEventListener('input', () => {
+          const searchValue = countrySearchInput.value.trim().toLowerCase();
+          const filtered = allCountries.filter(c =>
+            (translations[c] || c).toLowerCase().startsWith(searchValue)
+          );
+          renderCountryList(filtered);
+        });
+      }
+
+      // opening and closing the keyboard on mobile phones
+      if (countryInput && countryDropdown && countrySearchInput) {
+        countryInput.addEventListener('click', () => {
+          countryDropdown.classList.remove('visually-hidden');
+          setTimeout(() => {
+            countrySearchInput.focus(); // keyboard appears
+          }, 10);
+        });
+      }
+
+      if (closeCountrySearch && countryDropdown && countrySearchInput) {
+        closeCountrySearch.addEventListener('click', () => {
+          countryDropdown.classList.add('visually-hidden');
+          countrySearchInput.blur(); // hide keyboard
+        });
+      }
+}
+
+
+
+
+
+// opening and closing cities selection
+const citiesInput = document.getElementById('city-input');
+const citiesDropdown = document.getElementById('cities-dropdown');
+const citiesSearchInput = document.getElementById('cities-search-input');
+const closeCitiesSearch = document.querySelector('.close-cities-search');
+
+if (countryInput && countryDropdown && countrySearchInput) {
+    inputCity();
+}
+
+// ─── Desktop positioning for city search ───
+(function setupDesktopCityOverlay() {
+    const BREAKPOINT = 1024;
+    const searchWrapper = document.querySelector('.cities-search-input');
+    const dropdown      = citiesDropdown;                                  // id = 'cities-dropdown'
+    const searchInput   = citiesSearchInput;                               // id = 'cities-search-input'
+    const closeButton   = document.getElementById('close-cities-search');
+    const cityInputBox  = document.getElementById('city-input');
+
+    if (!cityInputBox || !searchWrapper || !dropdown) return;
+
+    let opened = false;
+
+    let clickOutside = handleClickOutside('cities-dropdown', 'city-input', closeDesktopDropdown);
+    document.addEventListener('click', clickOutside);
+
+    function syncPosition() {
+        if (!opened || window.innerWidth < BREAKPOINT) return;
+
+        const rect = cityInputBox.getBoundingClientRect();
+
+        // overlay the search input on top of #city-input
+        searchWrapper.style.top    = `${rect.top}px`;
+        searchWrapper.style.left   = `${rect.left}px`;
+        searchWrapper.style.width  = `${rect.width}px`;
+        searchWrapper.style.height = `${rect.height}px`;
+
+        // position ul cities-list right below the input
+        const list = document.getElementById('cities-list');
+        if (list) {
+            list.style.position = 'fixed';
+            list.style.left  = `${rect.left}px`;
+            list.style.top   = `${rect.top + rect.height}px`;
+            list.style.width = `${rect.width}px`;
+        }
+    }
+
+    function openDesktopDropdown() {
+        if (window.innerWidth < BREAKPOINT) return;
+        dropdown.classList.remove('visually-hidden');
+        opened = true;
+
+        // update the city list (it depends on the selected country)
+        if (typeof renderCityList === 'function') {
+            const selectedCountry = countryInput.dataset.countryKey;
+            let list = [];
+
+            if (selectedCountry && allCities[selectedCountry]) {
+                list = allCities[selectedCountry];
+            } else {
+                for (let key in allCities) list = list.concat(allCities[key]);
+            }
+            list.sort((a,b) => a.localeCompare(b));
+            renderCityList(list);
+        }
+
+        syncPosition();
+        window.addEventListener('scroll',  syncPosition);
+        window.addEventListener('resize',  syncPosition);
+        setTimeout(() => searchInput.focus(), 10);
+    }
+
+    function closeDesktopDropdown() {
+        dropdown.classList.add('visually-hidden');
+        opened = false;
+
+        // web won't do extra work
+        window.removeEventListener('scroll',  syncPosition);
+        window.removeEventListener('resize',  syncPosition);
+        document.removeEventListener('click', handleClickOutside); // Preventing memory leaks
+    }
+
+    // clicks
+    cityInputBox.addEventListener('click', openDesktopDropdown);
+    if (closeButton) closeButton.addEventListener('click', closeDesktopDropdown);
+})();
+
+
+function inputCity() {
   if (citiesInput && citiesDropdown && citiesSearchInput) {
       citiesInput.addEventListener('click', () => {
       citiesDropdown.classList.remove('visually-hidden');
-      document.documentElement.classList.add('no-scroll');
+      //document.documentElement.classList.add('no-scroll');
+      if (window.matchMedia('(max-width: 1023px)').matches) {
+          document.documentElement.classList.add('no-scroll');
+      }
       citiesSearchInput.value = ''; // reset the search bar
       setTimeout(() => {
         citiesSearchInput.focus(); // keyboard appears
@@ -327,7 +550,7 @@ fetch('./data/locations.json')
   })
   .then(data => {
     data.cities.forEach(city => {
-      const country = city.country;	
+      const country = city.country;
       const cityName = city.name;
 
       if (!allCities[country]) {
@@ -336,6 +559,29 @@ fetch('./data/locations.json')
       allCities[country].push(cityName);
     });
     // console.log('Cities by country:', allCities);
+
+
+  if (citiesSearchInput) {
+      citiesSearchInput.addEventListener('input', () => {
+          const searchValue = citiesSearchInput.value.trim().toLowerCase();
+          let filteredCities = [];
+
+          if (selectedCountryKey && allCities[selectedCountryKey]) {
+              filteredCities = allCities[selectedCountryKey].filter(city =>
+                  (translations[city] || city).toLowerCase().startsWith(searchValue)
+              );
+          } else {
+              for (let key in allCities) {
+                  const matchingCities = allCities[key].filter(city =>
+                      (translations[city] || city).toLowerCase().startsWith(searchValue)
+                  );
+                  filteredCities = filteredCities.concat(matchingCities);
+              }
+          }
+
+          renderCityList(filteredCities);
+      });
+  }
   })
 
   .catch(error => {
@@ -400,6 +646,7 @@ if (citiesInput && citiesDropdown && citiesSearchInput && countryInput) {
     }, 10);
   });
 }
+}
 
 
 const searchDirectionButton = document.getElementById('search-direction-button');
@@ -460,7 +707,8 @@ document.addEventListener('DOMContentLoaded', () => {
     breakpoints: {
       640: { slidesPerView: 1.2 },
       768: { slidesPerView: 1.5 },
-      1024: { slidesPerView: 2 },
+      1024: { slidesPerView: 2.5 },
+      1300: { slidesPerView: 3 },
     },
 
     // arrows (they are already in html)
@@ -491,9 +739,28 @@ document.querySelectorAll('.find-out').forEach(button => {
     // Go to results.html
     window.location.href = 'results.html';
   });
+
+    // search <img> near this link
+    const container = button.closest('.gallery-item');
+    const img = container?.querySelector('img');
+    if (img) {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => {
+            // Repeat the behavior of the link
+            const country = button.getAttribute('data-country');
+            const city = button.getAttribute('data-city');
+            const lang = localStorage.getItem('lang') || 'en';
+
+            localStorage.setItem('destination', JSON.stringify({
+                country,
+                city,
+                lang
+            }));
+
+            window.location.href = 'results.html';
+        });
+    }
 });
-
-
 
 
 // data from apiWeatherNow
@@ -679,7 +946,17 @@ if (window.location.pathname.includes('results.html')) {
       dayDiv.classList.add('forecast-day');
 
       const h3 = document.createElement('h3');
-      h3.textContent = dayNames[index];
+      if (index === 0) {
+          h3.setAttribute('data-i18n', 'tomorrow');
+          h3.textContent = translations["tomorrow"] || "Tomorrow";
+      } else if (index === 1) {
+          h3.setAttribute('data-i18n', 'forecast_day2');
+          h3.textContent = translations["forecast_day2"] || "In 2 days";
+      } else if (index === 2) {
+          h3.setAttribute('data-i18n', 'forecast_day3');
+          h3.textContent = translations["forecast_day3"] || "In 3 days";
+      }
+
       dayDiv.appendChild(h3);
 
       let wrapperDiv = document.createElement('div');
@@ -1002,7 +1279,7 @@ function renderFavoriteCitiesList() {
     }
 
     favoritesCitiesCards.appendChild(emptyMessage);
-    document.querySelector('.favorite-cities').style.height = '50vh';
+    //document.querySelector('.favorite-cities').style.height = '50vh';
 
     // Destroy Swiper if there was one
     if (window.favoritesSwiper) {
@@ -1034,6 +1311,7 @@ function renderFavoriteCitiesList() {
     cityGalleryImg.classList.add('city-gallery-img');
     cityGalleryImg.src = `./images/photos_of_cities/${country}/${city}/${city}_1.jpg`;
     cityGalleryImg.alt = `Photos of the ${city}`;
+    cityGalleryImg.loading = 'lazy';
     galleryItem.appendChild(cityGalleryImg);
 
     const cityButtons = document.createElement('div');
@@ -1043,7 +1321,7 @@ function renderFavoriteCitiesList() {
     const moreDetails = document.createElement('a');
     moreDetails.classList.add('more-details');
     moreDetails.setAttribute('data-i18n', 'details');
-    moreDetails.textContent = 'Details';
+    moreDetails.textContent = translations["details"] || "Details";
     cityButtons.appendChild(moreDetails);
 
     const deleteCity = document.createElement('a');
@@ -1099,9 +1377,10 @@ function renderFavoriteCitiesList() {
     spaceBetween: 20,
     grabCursor: true,
     breakpoints: {
-      640:  { slidesPerView: 1.2 },
-      768:  { slidesPerView: 1.5 },
-      1024: { slidesPerView: 2   },
+      640: { slidesPerView: 1.2 },
+      768: { slidesPerView: 1.5 },
+      1024: { slidesPerView: 2.5 },
+      1300: { slidesPerView: 3 },
     },
     navigation: {
       nextEl: '.swiper-button-next',
@@ -1109,6 +1388,40 @@ function renderFavoriteCitiesList() {
     },
   });
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const isDesktop = window.matchMedia("(min-width: 1024px) and (hover: hover)").matches;
+
+    if (isDesktop) {
+        const backgrounds = [
+            './images/desktop_background2.jpg',
+            './images/desktop_background3.jpg',
+            './images/desktop_background1.jpg'
+        ];
+
+        const storageKey = 'backgroundIndex';
+        let currentIndex = parseInt(localStorage.getItem(storageKey), 10);
+
+        // check: if there is no value or it is incorrect: start from 0
+        if (isNaN(currentIndex) || currentIndex >= backgrounds.length) {
+            currentIndex = 0;
+        }
+
+        // Use background
+        const selectedBackground = backgrounds[currentIndex];
+        const header = document.querySelector('.header');
+        if (header) {
+            header.style.backgroundImage = `url('${selectedBackground}')`;
+            header.style.backgroundSize = 'cover';
+            header.style.backgroundPosition = 'center';
+        }
+
+        // Update the index for next time
+        const nextIndex = (currentIndex + 1) % backgrounds.length;
+        localStorage.setItem(storageKey, nextIndex.toString());
+    }
+});
 
 
 

@@ -42,6 +42,9 @@
     white-space: nowrap !important;
 }
 
+
+
+
 /* Basic reset */
 * {
     margin: 0;
@@ -71,7 +74,6 @@ body {
 
 
 
-
 /* Main code */
 .header-background {
   position: absolute;
@@ -81,6 +83,7 @@ body {
   height: 100vh;
   object-fit: cover;
   z-index: -1;
+  scale: 1.8;
 }
 
 .header {
@@ -206,6 +209,7 @@ body {
 }
 
 .menu-items a {
+  display: block; /* clickability full width */
   text-decoration: none;
   color: white;
   padding-left: 1rem;
@@ -220,22 +224,37 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 0.3rem;
 }
-
+/*
 .hero-content {
   color: white;
   justify-content: flex-end;
-}
+}*/
 
 .hero-content h1 {
   padding: 1.5rem 0.8rem;
 }
-
+/*
 .hero-subcontent {
-  position: absolute;
-  top: 70vh;
+  position: relative;
+  top: 25vh;
   font-size: 1.1rem;
   padding-inline: 1rem;
+}*/
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Vertical distribution */
+  height: 100%; /* Stretches to the entire header */
+  color: white;
 }
+
+.hero-subcontent {
+  padding-inline: 1rem;
+  font-size: 1.1rem;
+  margin-bottom: 8rem;
+}
+
 
 .hero-subcontent a {
   background-color: rgb(127, 255, 212);
@@ -253,6 +272,22 @@ body {
   font-size: 1.5rem;
   color: black;
 }
+
+.hero-subcontent p {
+  text-align: center;
+  text-shadow:
+          -1px -1px 0 black,
+          1px -1px 0 black,
+          -1px  1px 0 black,
+          1px  1px 0 black;
+}
+
+.header-background-container {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
 
 
 
@@ -294,7 +329,7 @@ body {
 }
 
 .standard-button {
-  background-color: rgb(127, 255, 212);
+  background-color: #66e0c0;
   width: 80vw;
   height: 3.5rem;
   border-radius: 999px;
@@ -353,7 +388,7 @@ body {
 
 .country-dropdown-list, .cities-dropdown-list {
   width: 90vw;
-
+  color: black;
   list-style: none;
   padding: 0;
   margin-top: 1rem;
@@ -371,6 +406,7 @@ body {
 
 .country-search-input, .cities-search-input {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 }
@@ -435,6 +471,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   padding: 1.2rem;
+  margin-bottom: 2rem;
 }
 
 .gallery-item h3 {
@@ -556,6 +593,7 @@ body {
 
 .current-temp, .feels-like, .sunrise-time, .sunset-time {
   display: flex;
+  justify-content: center;
   flex-direction: row;
 }
 
@@ -657,8 +695,9 @@ body {
 /*                   */
 .favorite-cities {
   background: linear-gradient(to right, #00529a, #257499, #168a9e);
-  height: 105vh;
+
 }
+
 
 .favorite-cities h2 {
   color: white;
@@ -713,7 +752,9 @@ body {
   color: #fff;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 1rem;
-  margin-top: 1rem;
+  margin: 1rem auto;
+  margin-bottom: 5rem;
+  width: 90%;
 }
 
 
@@ -724,11 +765,14 @@ body {
 /*                   */
 /*       Footer      */
 /*                   */
-.footer {
-  height: 350px;
-}
+
 
 .footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  height: 350px;
   background-color: #003366;
   color: white;
   padding: 2rem 1rem;
@@ -791,8 +835,500 @@ body {
   border-radius: 999px;
   cursor: pointer;
   transition: background-color 0.3s;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #scroll-top-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
+
+
+
+@media (min-width: 400px) {
+  /* header */
+  .hero-content h1 {
+    padding-inline: 1.2rem;
+    font-size: 2.5rem;
+  }
+
+  .lang-button {
+    font-size: 1.2rem;
+  }
+
+  .menu-items li, .hero-subcontent a, .hero-subcontent p{
+    font-size: 1.7rem;
+  }
+
+  .menu-items li {
+    padding-block: 0.4rem;
+  }
+}
+
+@media (min-width: 768px){
+  .standard-button {
+    width: 20rem;
+  }
+
+
+
+
+  /* header */
+  .web-name {
+    font-size: 1.6rem;
+  }
+
+  .lang-button {
+    font-size: 1rem;
+    gap: 0.6rem;
+  }
+
+  .lang-dropdown {
+    font-size: 1rem;
+  }
+
+  .menu-items li {
+    font-size: 1.8rem;
+  }
+
+  .hero-content h1 {
+    margin-top: 2rem;
+  }
+
+  /* main */
+  #country-input, #city-input {
+    width: 25rem;
+  }
+
+  .empty-favorites-message {
+    width: 32rem;
+  }
+
+  .find-out {
+    width: 15rem;
+  }
+
+  .hero-subcontent a {
+    width: 24rem;
+    height: 5rem;
+  }
+
+  /* footer */
+  #scroll-top-button {
+    width: 20rem;
+  }
+
+  /* results */
+  .weather-card {
+    width: 50vw;
+  }
+
+  .forecast-day {
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  .gallery-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .gallery-image {
+    width: 80vw;
+  }
+
+  .country-facts {
+    padding: 3rem 7rem;
+  }
+
+  .favorite-cities {
+    padding-bottom: 5rem;
+  }
+
+
+
+
+
+}
+
+
+
+@media (min-width: 900px) {
+  /* menu */
+  #burger-button {
+    display: none;
+
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 2rem;
+    margin-left: 7rem;
+  }
+
+  .menu li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+
+  .menu li:first-child a::after {
+    content: '•'; /* dot symbol before Home */
+    color: white;
+
+    margin-left: 0.5rem;
+
+
+  }
+
+  .nav {
+    font-size: 1.4rem;
+  }
+
+  /* header */
+  .hero-content h1 {
+    margin-top: 3.4rem;
+    margin-left: 2rem;
+    font-size: 3rem;
+  }
+}
+
+
+
+
+/* Only laptops and desktops (with mouse) */
+@media (min-width: 1024px) and (hover: hover) {
+  .hero-subcontent {
+    display: flex;
+    flex-direction: row;
+    gap: 10rem;
+    padding-left: 2rem;
+  }
+
+  .hero-subcontent p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: start;
+    margin-left: 0;
+  }
+
+  .hero-subcontent a {
+    background-color: white;
+    margin-right: 4rem;
+  }
+
+  .hero-subcontent a:hover {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #e6f4ff, #cce4ff);
+  }
+
+  .hero-subcontent a:after {
+    content: "»";
+    font-size: 3rem;
+    margin-left: 0.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /*
+   .header {
+     background-image: url('./images/desktop_background2.jpg');
+     background-size: cover;
+     background-position: center;
+   } */
+
+
+  .hero-content h1 {
+    margin-top: 12rem;
+    padding: 0;
+    height: auto;
+
+    text-shadow:
+            -1px -1px 0 black,
+            1px -1px 0 black,
+            -1px  1px 0 black,
+            1px  1px 0 black;
+  }
+
+  .mobile-background {
+    display: none;
+  }
+
+  .hero-subcontent a {
+    width: 35rem;
+    height: 5rem;
+    font-size: 1.5rem;
+  }
+
+  .header {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+
+  /* country and city input */
+  .menu-destinations {
+    position: relative;
+  }
+
+  .country-dropdown, .cities-dropdown {
+    background-color: transparent;
+    width: 0;
+  }
+
+  .country-search-input, .cities-search-input {
+    position: fixed;
+    z-index: 101;
+    margin: 0;
+  }
+
+  .country-dropdown-search, .cities-dropdown-search {
+    padding: 0.3rem 0.5rem;
+    height: 3rem;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    border: none;
+  }
+
+  .country-dropdown-list, .cities-dropdown-list {
+    position: fixed;
+    z-index: 102;
+    background-color: white;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  .country-dropdown-list li, .cities-dropdown-list li {
+    color: black;
+    background: white;
+    font-size: 1rem;
+  }
+
+  .country-dropdown-list li:hover, .cities-dropdown-list li:hover {
+    background: #eee;
+  }
+
+
+  .close-country-search, .close-cities-search  {
+    margin-right: 1rem;
+  }
+
+  .country-dropdown-search:focus, .cities-dropdown-search:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /*
+  .dropdown-inner {
+    position: relative;
+  }
+
+   */
+
+
+  /* gallery */
+  .gallery-item {
+    max-width: 35vw;
+    margin: 0 auto;
+  }
+
+  .swiper-slide {
+    max-width: 40vw;
+  }
+
+  .gallery-item img {
+    height: 70vh;
+  }
+
+  /* footer */
+  .footer {
+    height: 19rem;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+@media (min-width: 1366px) {
+
+
+  .hero-content h1 {
+    margin-top: 25rem;
+    padding: 0;
+    height: auto;
+  }
+
+  /* results.html */
+  .weather-card {
+    width: 20rem;
+  }
+
+
+  #forecast-container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .forecast-day {
+    flex: 1;
+    max-width: none;
+  }
+
+  .desktop-weather-container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    padding-inline: 2rem;
+    background: linear-gradient(to right, #00529a, #257499, #168a9e);
+  }
+
+  .forecast-weather, .basic-info-city, .current-weather {
+    background: none;
+  }
+
+  .forecast-weather {
+    padding-top: 2rem;
+  }
+
+  .weather-card {
+    color: white;
+    background: none;
+  }
+
+  .basic-info-city {
+    background: linear-gradient(to right, #00529a, #257499, #168a9e);
+  }
+
+  .forecast-weather h2 {
+    display: none;
+  }
+
+  /* results gallery */
+  #city-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 2rem;
+    background: linear-gradient(to right, #00529a, #257499, #168a9e);
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease;
+  }
+
+  .gallery-image:hover {
+    transform: scale(1.04);
+    cursor: pointer;
+  }
+
+  /* footer */
+  .footer {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 8rem;
+    height: 10rem;
+    padding-inline: 3rem;
+  }
+
+  .desktop-footer-container {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 3rem;
+    gap: 1rem;
+  }
+
+  #scroll-top-button {
+    width: 10rem;
+    position: absolute;
+    right: 5rem;
+    bottom: 4rem;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+
+  }
+
+  .footer-contact input {
+    width: 350px;
+  }
+
+  .desktop-footer-container {
+    width: 25rem;
+  }
+}
+
+
+@media (min-width: 1440px) {
+  .hero-content h1 {
+    margin-top: 30rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .hero-content h1 {
+    margin-top: 40rem;
+  }
+
+  /* footer */
+  .footer {
+    gap: 20rem;
+    height: 10rem;
+
+  }
+
+  .desktop-footer-container {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 3rem;
+    gap: 1rem;
+  }
+
+  #scroll-top-button {
+    width: 10rem;
+    position: absolute;
+    right: 5rem;
+    bottom: 4rem;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+
+  }
+
+  .footer-contact input {
+    width: 350px;
+  }
+}
+
+
+
