@@ -57,6 +57,7 @@
   "gallery_title_city": "Галерея",
   "back_to_search": "← Назад к поиску",
   "save_city": "Сохранить город",
+  "delete_city": "Удалить город",
   "country_population": "миллионов",
   "country_area": "км²",
   "alert_fill_country_city": "Пожалуйста, выберите страну и город.",
@@ -71,5 +72,7 @@
   "subscribe_label": "Подпишитесь на обновления о новых городах:",
   "subscribe_button": "Подписаться",
   "footer_copyright": "© 2025 Afa travel – Самый умный способ спланировать поездку",
-  "top_button": "↑ Наверх"
+  "top_button": "↑ Наверх",
+
+  "tooltip_delete": "Удалить город"
 }

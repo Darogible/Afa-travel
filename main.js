@@ -1,6 +1,9 @@
 // change language
 const langToggle = document.getElementById('lang-toggle');
 const langMenu = document.getElementById('lang-menu');
+const burgerButton = document.getElementById('burger-button');
+const mobileMenu = document.getElementById('mobile-menu');
+const navBackground = document.querySelector('.nav');
 
 if (langToggle && langMenu) {
   langToggle.addEventListener('click', () => {
@@ -33,10 +36,6 @@ window.addEventListener('scroll', () => {
 
 
 /* mobile burger menu */
-const burgerButton = document.getElementById('burger-button');
-const mobileMenu = document.getElementById('mobile-menu');
-const navBackground = document.querySelector('.nav');
-
 if (burgerButton && mobileMenu && navBackground) {
   burgerButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('visually-hidden');
@@ -191,6 +190,7 @@ let selectedCityKey = '';
 // opening and closing country selection
 const countryInput = document.getElementById('country-input');
 const countryDropdown = document.getElementById('country-dropdown');
+
 const countrySearchInput = document.getElementById('country-search-input');
 const closeCountrySearch = document.querySelector('.close-country-search');
 
@@ -684,6 +684,10 @@ if (searchDirectionButton && countryInput && citiesInput) {
       lang: lang
     }));
 
+    // old values are not shown when user return
+    countryInput.value = '';
+    citiesInput.value = '';
+
     window.location.href = 'results.html';
   });
 }
@@ -1100,41 +1104,57 @@ if (destination && typeof destination === 'object') {
   city = destination.city;
 }
 
-
+// scroll buttons
 document.addEventListener('DOMContentLoaded', () => {
-  const scrollToTopButton = document.getElementById('scroll-top-button');
-  if (scrollToTopButton) {
-    scrollToTopButton.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+    const scrollToTopButton = document.getElementById('scroll-top-button');
+    const scrollTopButton2 = document.getElementById('scroll-top-button2');
+    const isMobile = window.innerWidth <= 1024;
+    const header = document.querySelector('header');
+
+
+    // scroll handler (shows or hides the button)
+    window.addEventListener('scroll', () => {
+        if (!scrollTopButton2 || !header || !isMobile) return;
+        const headerTop = header.getBoundingClientRect().top;
+
+        // hide the button if the header is in the visible area
+        if (headerTop >= 0) {
+            scrollTopButton2.style.display = 'none';
+            return;
+        }
+
+        // show if scroll > 300
+        if (window.scrollY > 300) {
+            scrollTopButton2.style.display = 'flex';
+        } else {
+            scrollTopButton2.style.display = 'none';
+        }
     });
-  }
+
+    // click handlers (scroll up)
+    if (scrollToTopButton) {
+        scrollToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    if (scrollTopButton2) {
+        scrollTopButton2.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        scrollTopButton2.style.display = 'none';
+    }
 });
 
 
-/*
-if (window.location.pathname.includes('results.html')) {
-  const destinationStr = localStorage.getItem('destination');
-  const destination = JSON.parse(destinationStr);
 
-  let country = destination.country;
-  let city = destination.city;
 
-  const countryCityEl = document.getElementById('country-city');
-  if (countryCityEl) {
-    countryCityEl.textContent = `${capitalizeWords(city)}, ${capitalizeWords(country)}`;
-  }
-}
-*/
-
-/*
-const countryCityElement = document.getElementById('country-city');
-if (countryCityElement) {
-  countryCityElement.textContent = `${capitalizeWords(city)}, ${capitalizeWords(country)}`;
-}
-*/
 
 function updateCountryCity() {
   const destination = JSON.parse(localStorage.getItem('destination'));
@@ -1235,15 +1255,20 @@ if (saveButton) {
   // ——— Helper for changing text and data-i18n ———
   function updateButtonText() {
     if (isInFavorites()) {
-      saveButton.textContent = 'Delete city';
-      saveButton.setAttribute('data-i18n', 'delete_city');
-      saveButton.style.backgroundColor = 'rgb(246,104,104)';
+        saveButton.setAttribute('data-i18n', 'delete_city');
+        saveButton.style.backgroundColor = 'rgb(246,104,104)';
     } else {
-      saveButton.textContent = 'Save city';
-      saveButton.setAttribute('data-i18n', 'save_city');
-      saveButton.style.backgroundColor = 'rgb(127, 255, 212)';
+        saveButton.setAttribute('data-i18n', 'save_city');
+        saveButton.style.backgroundColor = 'rgb(127, 255, 212)';
+    }
+
+    // translate text when changing language
+    const key = saveButton.getAttribute('data-i18n');
+    if (translations[key]) {
+        saveButton.textContent = translations[key];
     }
   }
+
 }
 
 
@@ -1313,6 +1338,13 @@ function renderFavoriteCitiesList() {
     cityGalleryImg.alt = `Photos of the ${city}`;
     cityGalleryImg.loading = 'lazy';
     galleryItem.appendChild(cityGalleryImg);
+    cityGalleryImg.style.cursor = 'pointer';
+
+    cityGalleryImg.addEventListener('click', () => {
+      const lang = localStorage.getItem('lang') || 'en';
+      localStorage.setItem('destination', JSON.stringify({ country, city, lang }));
+      window.location.href = 'results.html';
+    });
 
     const cityButtons = document.createElement('div');
     cityButtons.classList.add('city-buttons');
@@ -1327,6 +1359,9 @@ function renderFavoriteCitiesList() {
     const deleteCity = document.createElement('a');
     deleteCity.classList.add('delete-city');
     deleteCity.textContent = '❌';
+    const tooltipText = translations['tooltip_delete'] || 'Delete city';
+    deleteCity.setAttribute('aria-label', tooltipText);
+    deleteCity.setAttribute('title', tooltipText);
     cityButtons.appendChild(deleteCity);
 
     moreDetails.addEventListener('click', () => {
@@ -1393,13 +1428,7 @@ function renderFavoriteCitiesList() {
 document.addEventListener("DOMContentLoaded", () => {
     const isDesktop = window.matchMedia("(min-width: 1024px) and (hover: hover)").matches;
 
-    if (isDesktop) {
-        const backgrounds = [
-            './images/desktop_background2.jpg',
-            './images/desktop_background3.jpg',
-            './images/desktop_background1.jpg'
-        ];
-
+    function createBackgrounds(backgrounds) {
         const storageKey = 'backgroundIndex';
         let currentIndex = parseInt(localStorage.getItem(storageKey), 10);
 
@@ -1421,7 +1450,57 @@ document.addEventListener("DOMContentLoaded", () => {
         const nextIndex = (currentIndex + 1) % backgrounds.length;
         localStorage.setItem(storageKey, nextIndex.toString());
     }
+
+    if (isDesktop) {
+        const backgrounds = [
+            './images/backgrounds/desktop_background2.jpg',
+            './images/backgrounds/mobile-background1.jpg',
+            './images/backgrounds/desktop_background1.jpg'
+        ];
+        createBackgrounds(backgrounds);
+    } else {
+        const backgrounds = [
+            './images/backgrounds/mobile-background1.jpg',
+            './images/backgrounds/desktop_background1.jpg',
+            './images/backgrounds/mobile-background2.jpg',
+            './images/backgrounds/desktop_background2.jpg'
+        ];
+        createBackgrounds(backgrounds);
+    }
 });
+
+<!-- Overlay for fullscreen image -->
+const overlay = document.getElementById('image-overlay');
+const overlayImg = document.getElementById('overlay-image');
+const closeOverlayImg = document.getElementById('close-overlay');
+
+document.querySelectorAll('.gallery-wrapper img').forEach(img => {
+    img.addEventListener('click', () => {
+        overlayImg.src = img.src;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Close when the user clicks on the "close" or on the background
+    overlay.addEventListener('click', click => {
+        if(click.target === overlay || click.target === closeOverlayImg) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Close by pressing Esc
+    document.addEventListener('keydown', click => {
+        if (click.key === 'Escape') {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+});
+
+
+
+
 
 
 

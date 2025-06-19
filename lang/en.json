@@ -57,6 +57,7 @@
   "gallery_title_city": "Gallery",
   "back_to_search": "← Back to Search",
   "save_city": "Save city",
+  "delete_city": "Delete city",
   "country_population": "million",
   "country_area": "km²",
   "alert_fill_country_city": "Please select both a country and a city.",
@@ -70,5 +71,7 @@
   "subscribe_label": "Subscribe for updates on new cities:",
   "subscribe_button": "Subscribe",
   "footer_copyright": "© 2025 Afa travel – The smartest way to plan your trip",
-  "top_button": "↑ Top"
+  "top_button": "↑ Top",
+
+  "tooltip_delete": "Delete city"
 }

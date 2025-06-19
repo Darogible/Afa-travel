@@ -57,6 +57,7 @@
   "gallery_title_city": "Galerie",
   "back_to_search": "← Zpět na hledání",
   "save_city": "Uložit město",
+  "delete_city": "Smazat město",
   "country_population": "milionů",
   "country_area": "km²",
   "alert_fill_country_city": "Vyberte prosím zemi a město.",
@@ -69,5 +70,7 @@
   "subscribe_label": "Přihlaste se k odběru nových měst:",
   "subscribe_button": "Přihlásit se",
   "footer_copyright": "© 2025 Afa travel – Nejchytřejší způsob, jak naplánovat cestu",
-  "top_button": "↑ Nahoru"
+  "top_button": "↑ Nahoru",
+
+  "tooltip_delete": "Smazat město"
 }
